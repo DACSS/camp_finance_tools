@@ -154,23 +154,25 @@ merge_orig_address<-function(data){
 geocode_bulk<-function(project=NULL){
   if(!exists("geo_addresses_v1")){
     system("echo 'id_add_orig,old.address,match,match.type,new.address,coordinates,tigerLine,side,state.num,county.num,block.num,district.num' > geo/geocols.txt")
-    file_pattern <-str_c("cd geo; ls Address", project, "*", sep="")
+    file_pattern <-str_c("cd geo; ls Address", project, "*", sep="_")
     filenames<-system(file_pattern, intern = TRUE)
-    for(f in filenames){
-      print(paste("Processing", f, sep=" "))
-      geo.call <-str_c("cd geo; curl --form addressFile=@", f, 
-                       " --form benchmark=4 --form vintage=420 --form layers=0",
-                       " https://geocoding.geo.census.gov/geocoder/geographies/addressbatch --output",
-                       " Geo", f, sep="")
-      system(geo.call, intern=FALSE)
-      add.header <-str_c("cd geo; cat geocols.txt Geo", f, 
-                         " > temp && mv temp Geo", f, sep="")
-      system(add.header, intern=FALSE)
-    }
+    furrr::future_map(filenames, geocode_post)
     #Read in geocoded addresses
     geo_filenames <- list.files("geo", 
                             pattern=str_c("GeoAddress", project, "*",sep=""),
                             full.names=TRUE)
     return(geo_filenames)
   }
+}
+
+geocode_post<-function(f){
+  print(paste("Processing", f, sep=" "))
+  geo.call <-str_c("cd geo; curl --form addressFile=@", f, 
+                   " --form benchmark=4 --form vintage=420 --form layers=0",
+                   " https://geocoding.geo.census.gov/geocoder/geographies/addressbatch --output",
+                   " Geo", f, sep="")
+  system(geo.call, intern=FALSE)
+  add.header <-str_c("cd geo; cat geocols.txt Geo", f, 
+                     " > temp && mv temp Geo", f, sep="")
+  system(add.header, intern=FALSE)
 }

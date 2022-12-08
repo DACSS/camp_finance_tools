@@ -10,11 +10,12 @@ unmatched_addresses<-geo_addresses_v1%>%
   distinct()%>%
   select(id_add_orig, old.address)
 
+## add in parallel
 #Single Address Geocoding
 if(!exists("geo_addresses_v2")){
   print("Processing single addresses. May take a while.")
   geo_addresses_v2 <- 
-  map2(unmatched_addresses$old.address,
+  furrr::future_map2(unmatched_addresses$old.address,
        unmatched_addresses$id_add_orig,
        safe_geocode_single_address)
   geo_addresses_v2<-map_dfr(geo_addresses_v2, unlist)
@@ -88,7 +89,7 @@ if(!exists("address_tofix")){
     mutate(match.type="Unmatched")
 
   #choose easy location to find file
-  write_csv(address_tofix, "Data/lowell_address_tofix.csv")
+  write_csv(address_tofix, "Data/seattle_address_tofix.csv")
 }
 
 address_clean<-merge_orig_address(address_clean_v1)%>%
