@@ -14,8 +14,7 @@ unmatched_addresses<-geo_addresses_v1%>%
 #Single Address Geocoding
 if(!exists("geo_addresses_v2")){
   print("Processing single addresses. May take a while.")
-  geo_addresses_v2 <- 
-  furrr::future_map2(unmatched_addresses$old.address,
+  geo_addresses_v2 <- furrr::future_map2(unmatched_addresses$old.address,
        unmatched_addresses$id_add_orig,
        safe_geocode_single_address)
   geo_addresses_v2<-map_dfr(geo_addresses_v2, unlist)
