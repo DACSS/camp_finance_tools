@@ -8,6 +8,5 @@ contributions_clean_v1 <- contributions_orig %>%
 contributions_clean_v1 <- name_clean %>%
   right_join(., contributions_clean_v1, by = "id_name_orig")
 
-contributions_clean_v1 <- address_clean %>%
-  right_join(., contributions_clean_v1, by = "id_add_orig", suffix = c(".x", "")) %>%
-  select(-ends_with(".x"))
+contributions_clean_v1 <- address_clean%>%
+  right_join(., contributions_clean_v1) 
