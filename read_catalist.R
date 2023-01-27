@@ -16,7 +16,7 @@ write_precat <- function(data, project = "AB2017", n.rows=100000){
 }
 
 
-read_catalist<-function(file, newvar = "newvar",project="lowell"){
+read_catalist<-function(file, newvar = "newvar",project="lowell/"){
   filepath<-paste("catalist_post/", project, file, sep="")
   #read colnames
   catalist.cols<-read_csv(filepath,
@@ -34,4 +34,11 @@ read_catalist<-function(file, newvar = "newvar",project="lowell"){
                               values_to = "value")%>%
     filter(value==1)%>%
     select(-value)
+}
+
+join_catalist_vars<-function(varname="Age", varlist=newvars, 
+                             catList=catalist_vars){
+  varOrder<-grep(varname,newvars)
+  temp<-bind_rows(catalist_vars[varOrder])
+  return(temp)
 }
