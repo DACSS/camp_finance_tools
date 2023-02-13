@@ -159,7 +159,7 @@ geocode_bulk<-function(project=NULL){
     furrr::future_map(filenames, geocode_post)
     #Read in geocoded addresses
     geo_filenames <- list.files("geo", 
-                            pattern=str_c("GeoAddress", project, "*",sep=""),
+                            pattern=str_c("GeoAddress", project, "*", sep="_"),
                             full.names=TRUE)
     return(geo_filenames)
   }
