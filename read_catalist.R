@@ -18,6 +18,7 @@ write_precat <- function(data, project = "AB2017", n.rows=100000){
 
 read_catalist<-function(file, newvar = "newvar",project="lowell/"){
   filepath<-paste("catalist_post/", project, file, sep="")
+  value_name<-paste("value", newvar, sep="_")
   #read colnames
   catalist.cols<-read_csv(filepath,
                             skip=1)%>%
@@ -25,15 +26,14 @@ read_catalist<-function(file, newvar = "newvar",project="lowell/"){
     colnames(.)
   catalist.cols<-c("drop", "id", catalist.cols)
   catalist.data<-read_csv(filepath,
-                            skip=4,
+                            skip=3,
                             col_names=catalist.cols)%>%
     select(-drop)
   catalist.data<-pivot_longer(catalist.data,
                               cols = -id,
                               names_to = newvar,
-                              values_to = "value")%>%
-    filter(value==1)%>%
-    select(-value)
+                              values_to = value_name)%>%
+    filter(!is.na(.data[[value_name]]))
 }
 
 join_catalist_vars<-function(varname="Age", varlist=newvars, 
