@@ -1,6 +1,7 @@
 library(igraph)
 
-donors_orig <- contributions_clean_v1 %>%
+create_donors_orig <- function(data){
+donors_orig <- {{data}} %>%
   ungroup()%>%
   filter(org=="not org")%>%
   select(id_name_orig, id_name_clean, 
@@ -17,7 +18,7 @@ donors_orig <- contributions_clean_v1 %>%
   select(-elect_year)%>%
   distinct()%>%
   ungroup()
-  
+}  
 
 #donor key
 create_donor_key<-function(data){
