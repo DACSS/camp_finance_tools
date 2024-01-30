@@ -13,8 +13,8 @@
 
 # since the census data does not have spaces, lets remove dashes of complex last names
 prep_names <- function(x, compound= NULL) {
-  compound_last_names<-c(" LA " = " LA","DEN " = " DEN", " DER " = " DER",  
-                         " LOS " = " LOS", "VON " = " VON", 
+  compound_last_names<-c(" LA " = " LA"," DEN " = " DEN", " DER " = " DER",  
+                         " LOS " = " LOS", " VON " = " VON", 
                          " VAN " = " VAN", " DEL " = " DEL", " DE " = " DE", 
                          " MC " = " MC" ," SA " = " SA",
                          " MAC " = " MAC", " ST " = " ST")
