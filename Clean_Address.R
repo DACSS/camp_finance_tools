@@ -88,7 +88,7 @@ if(!exists("address_tofix")){
     mutate(match.type="Unmatched")
 
   #choose easy location to find file
-  write_csv(address_tofix, "Data/seattle_address_tofix.csv")
+  write_csv(address_tofix, "Data/seattle_address_tofix21.csv")
 }
 
 address_clean<-merge_orig_address(address_clean_v1)%>%

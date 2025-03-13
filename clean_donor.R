@@ -1,17 +1,17 @@
 library(igraph)
 
-create_donors_orig <- function(data){
+create_donors_orig <- function(data, var, first_name, last_name, middle_name){
 donors_orig <- {{data}} %>%
   ungroup()%>%
-  filter(org=="not org")%>%
+  filter({{var}}=="not org")%>%
   select(id_name_orig, id_name_clean, 
          orig_name, clean_name, 
-         first_name, last_name, 
+         {{first_name}}, {{last_name}}, 
          id_add_orig, id_add_clean, 
          address_single, new.address, 
          occupation_orig, employer_orig,
          match.type, elect_year,
-         apt, middle_name)%>%
+         apt, {{middle_name}})%>%
   group_by(id_name_orig, id_add_orig, occupation_orig,
            employer_orig)%>%
   mutate(years = paste(unique(elect_year), collapse="; "))%>%
@@ -21,17 +21,17 @@ donors_orig <- {{data}} %>%
 }  
 
 #donor key
-create_donor_key<-function(data){
+create_donor_key<-function(data, first_name, last_name){
   data%>%
     filter(match.type!="Missing")%>%
-  select(id_name_clean,id_add_clean, last_name, first_name)%>%
+  select(id_name_clean,id_add_clean, {{last_name}}, {{first_name}})%>%
     distinct()%>%
   group_by(id_add_clean)%>%
-  mutate(address_key2 = match(last_name, unique(last_name)),
-         names_same_add = n_distinct(last_name))%>%
+  mutate(address_key2 = match({{last_name}}, unique({{last_name}})),
+         names_same_add = n_distinct({{last_name}}))%>%
   group_by(id_add_clean, address_key2)%>%
   mutate(address_key3 = 
-           match(str_sub(first_name,1,1), unique(str_sub(first_name,1,1))),
+           match(str_sub({{first_name}},1,1), unique(str_sub({{first_name}},1,1))),
          address_key_strict = 
            paste(id_add_clean, address_key2, address_key3, sep="."),
          address_key_loose = case_when(
